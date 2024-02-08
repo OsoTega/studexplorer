@@ -8,7 +8,7 @@ const pwa =  withPWA({
 });
 
 const nextConfig = {
-    reactStrictMode: false,
+    reactStrictMode: true,
 };
 
 export default pwa(nextConfig);
