@@ -22,7 +22,7 @@ export default function Home() {
   return (
    <div className="w-full h-[500px] mt-[80px] md:mt-[140px] flex flex-col space-y-8 justify-center items-center">
     <h1 className="text-[28px] font-bold">Select your language</h1>
-    <p className="text-muted-foreground">This would influence the interpretation of messages you receive</p>
+    <p className="text-muted-foreground text-center md:text-start ">This would influence the interpretation of messages you receive</p>
       <ResponsiveSelect languages={languages}/>
         <Button
         onClick={()=>{
