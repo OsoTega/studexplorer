@@ -8,7 +8,21 @@ const pwa =  withPWA({
 });
 
 const nextConfig = {
-    reactStrictMode: true,
+    images: {
+        remotePatterns: [
+            {
+                hostname: "localhost",
+                pathname: "**",
+                port: '3000',
+                protocol: "http"
+            },
+            {
+                hostname: "https://stud-explorer.onrender.com",
+                pathname: "**",
+                protocol: "https"
+            }
+        ]
+    }
 };
 
 export default pwa(nextConfig);
