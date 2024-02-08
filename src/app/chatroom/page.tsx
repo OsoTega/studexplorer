@@ -35,6 +35,7 @@ const socket = io("https://stud-explorer.onrender.com");
 export default function Home() {
     const [messageList, setMessageList] = useState<{type: boolean, message: string}[]>([]);
     const [room, setRoom] = useState("");
+    const [userId, setUserId] = useState("");
     const router = useRouter();
     const roomRef = useRef(room);
     const [info, setInfo] = useState(false);
@@ -46,7 +47,7 @@ export default function Home() {
         socket.emit("send_message", {room, message, language: language ? language : "en"});
     }
 
-    const requestRoom = async () =>{
+    const requestRoom = async (id?: string) =>{
       const language = localStorage.getItem("studexplorer_language");
       const response = await fetch('https://stud-explorer.onrender.com/create-room', {
         method: "POST",
@@ -57,7 +58,8 @@ export default function Home() {
         body: JSON.stringify({
           room,
           language: language ? language : "en",
-          rooms: roomHistory
+          rooms: roomHistory,
+          id
         })
       })
 
@@ -82,7 +84,8 @@ export default function Home() {
         body: JSON.stringify({
           room,
           language: language ? language : "en",
-          rooms: roomHistory
+          rooms: roomHistory,
+          id: userId
         })
       })
 
@@ -99,7 +102,8 @@ export default function Home() {
 
 
     useEffect(()=>{
-      requestRoom().then((value)=>{
+      const id = crypto.randomBytes(16).toString("hex");
+      requestRoom(id).then((value)=>{
         setRoom(value.roomId);
         roomRef.current = value.roomId;
         setActive(value.active);
@@ -108,6 +112,7 @@ export default function Home() {
           newRoom.push(value.roomId);
           return newRoom;
         })
+        setUserId(id);
 
         socket.emit("join_room", value.roomId);
       });
@@ -189,7 +194,7 @@ export default function Home() {
               leaveRoom().then((leaveResult)=>{
                 if(leaveResult.success){
                   socket.emit("leave_room", room);
-                  requestRoom().then((value)=>{
+                  requestRoom(userId).then((value)=>{
                     setRoom(value.roomId);
                     roomRef.current = value.roomId;
                     setActive(value.active);
@@ -248,7 +253,7 @@ export default function Home() {
             leaveRoom().then((leaveResult)=>{
               if(leaveResult.success){
                 socket.emit("leave_room", room);
-                requestRoom().then((value)=>{
+                requestRoom(userId).then((value)=>{
                   setRoom(value.roomId);
                   roomRef.current = value.roomId;
                   setActive(value.active);
