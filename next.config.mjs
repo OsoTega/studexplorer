@@ -20,6 +20,10 @@ const nextConfig = {
                 hostname: "https://stud-explorer.onrender.com",
                 pathname: "**",
                 protocol: "https"
+            },
+            {
+                hostname: "**",
+                protocol: "https"
             }
         ]
     }

@@ -15,14 +15,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "./ui/alert-dialog"
+import Link from 'next/link'
 
 const Navbar = () => {
   const {user, isLoaded} = useUser()
   return (
     <div className='w-full flex flex-row pt-4 justify-between'>
         <div>
-          <Image src="/StudExplorer-logos_black.png" 
-          width={50} height={50} alt='logo'/>
+          <Link href="/" className='cursor-pointer'>
+            <Image src="/StudExplorer-logos_black.png" 
+            width={50} height={50} alt='logo'/>
+          </Link>
         </div>
         <div className='flex flex-row space-x-10'>
           {

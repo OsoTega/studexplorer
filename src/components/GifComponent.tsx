@@ -1,14 +1,28 @@
-import React from 'react'
-import { Grid } from '@giphy/react-components'
-import { GiphyFetch } from '@giphy/js-fetch-api'
+import React, { useEffect, useState } from 'react'
+import Image from 'next/image';
+import { Loader2 } from 'lucide-react';
 
 const GifComponent = () => {
-    const gf = new GiphyFetch(`${process.env.NEXT_PUBLIC_GIPHY_API_KEY}`)
+    const [gif, setGif] = useState("");
 
-// configure your fetch: fetch 10 gifs at a time as the user scrolls (offset is handled by the grid)
-const fetchGifs = (offset: number) => gf.search('waiting',{ sort: "recent", limit: 1, type: 'videos' })
+    useEffect(()=>{
+      fetch(`https://api.giphy.com/v1/gifs/search?q=waiting&api_key=${process.env.NEXT_PUBLIC_GIPHY_API_KEY}`,{
+        method: 'GET'
+      }).then(async (e)=>{
+        const {data} = await e.json();
+        const selectedGif = Math.floor(Math.random() * (data.length -1));
+        setGif(data[selectedGif].images.downsized_medium.url)
+      })
+    }, [])
+
   return (
-    <Grid width={800} columns={3} fetchGifs={fetchGifs}  />
+    <div className='w-full flex justify-center items-center'>
+      {gif.length > 0 ? (
+         <Image src={gif} width={400} height={400} alt='gif'/>
+      ) : (
+        <Loader2 className='w-10 h-10 animate-spin'/>
+      )}
+    </div>
   )
 }
 

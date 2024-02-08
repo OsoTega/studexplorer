@@ -20,7 +20,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button";
-import { DoorOpen, RotateCw } from "lucide-react";
+import { ArrowLeft, DoorOpen, RotateCw } from "lucide-react";
 import MessageRoom from "@/components/MessageRoom";
 import MessageSender from "@/components/MessageSender";
 import {io} from 'socket.io-client'
@@ -29,11 +29,13 @@ import crypto from 'crypto';
 import useMediaQuery from "@/hooks/use-media-query";
 import GifComponent from "@/components/GifComponent";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { useRouter } from "next/navigation";
 const socket = io("https://stud-explorer.onrender.com");
 
 export default function Home() {
     const [messageList, setMessageList] = useState<{type: boolean, message: string}[]>([]);
     const [room, setRoom] = useState("");
+    const router = useRouter();
     const roomRef = useRef(room);
     const [info, setInfo] = useState(false);
     const [roomHistory, setRoomHistory] = useState<any | never | unknown>([]);
@@ -156,7 +158,20 @@ export default function Home() {
         }
     }, [socket])
   return (
-   <div className="w-full h-[500px] mt-[80px] md:mt-[140px] flex flex-col space-y-8 justify-center items-center">
+   <div className="w-full h-[500px] mt-[140px] md:mt-[140px] flex flex-col space-y-8 justify-center items-center">
+    <Button onClick={()=>{
+      setRoom("");
+      setActive(false);
+      setMessageList([]);
+      leaveRoom().then((leaveResult)=>{
+        if(leaveResult.success){
+          socket.emit("leave_room", room);
+          router.replace("/");
+        }
+      })
+    }} className="self-start" variant="outline">
+    <ArrowLeft/>
+    </Button>
      <Card className="w-[350px] md:w-[450px]">
       <CardContent className="pt-8 pb-8">
         {
@@ -208,7 +223,7 @@ export default function Home() {
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <GifComponent/>
-          <p>Searching for a conversation </p>
+          <p className="text-center">Searching for a conversation </p>
         </div>
       </DialogContent>
     </Dialog>
