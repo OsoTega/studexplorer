@@ -2,7 +2,7 @@ import React from 'react'
 
 const Footer = () => {
   return (
-    <div className='text-center mt-[100px] mb-[40px] md:mt-[200px]'>
+    <div className='text-center mt-[140px] mb-[40px] md:mt-[200px]'>
         <p className='text-muted-foreground'>
             This is a non-profit service to students of Swansea University, 
             any profit made goes <br></br> back into making the service better, FEEL FREE TO DONATE,
