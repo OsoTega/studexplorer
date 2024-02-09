@@ -219,14 +219,14 @@ export default function Home() {
       <CardContent className="pt-8 pb-8">
         {
           room.trim().length > 0 && (
-            <div className="flex flex-row justify-between">
+            <div className="flex flex-row items-center justify-between">
             <Button variant="outline" className="rounded-full">
                 {
                   !mobile ? "chat_"+room.substring(0, 5)+"..." : "chat_"+room.substring(0, 10)+"..."
                 }
             </Button>
             {userTyping && (
-              <p className="text-muted-foreground text-[14px]">Typing</p>
+              <p className="text-muted-foreground text-[10px]">Typing...</p>
             )}
             <Button onClick={()=>{
               setRoom("");
