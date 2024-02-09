@@ -222,11 +222,11 @@ export default function Home() {
             <div className="flex flex-row justify-between">
             <Button variant="outline" className="rounded-full">
                 {
-                  !mobile ? "chat_"+room.substring(0, 5)+"..." : "chat_"+room
+                  !mobile ? "chat_"+room.substring(0, 5)+"..." : "chat_"+room.substring(0, 10)+"..."
                 }
             </Button>
             {userTyping && (
-              <p className="text-muted-foreground">Typing</p>
+              <p className="text-muted-foreground text-[14px]">Typing</p>
             )}
             <Button onClick={()=>{
               setRoom("");
