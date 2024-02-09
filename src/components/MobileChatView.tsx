@@ -87,7 +87,7 @@ const MobileChatView = ({
      <div className="w-full pt-8 pb-8">
      {
           room.trim().length > 0 && (
-            <div className="flex fixed w-full pl-2 pr-2 bg-white top-[56.8px] h-[58px] left-0 flex-row items-center justify-between">
+            <div className="flex fixed w-full pl-2 bg-white top-[56.8px] h-[58px] left-0 flex-row items-center justify-between">
             <Button variant="outline" className="rounded-full">
                 {
                   "chat_"+room.substring(0, 5)+"..."

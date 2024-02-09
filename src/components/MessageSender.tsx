@@ -13,7 +13,7 @@ const MessageSender = ({sendMessage, messageList, onTyping, isMobile}:
     const [message, setMessage] = useState("");
   if(isMobile){
     return (
-        <div className='w-full bg-white fixed left-0 bottom-0 h-fit border-t-[1px] pl-2 pr-2 pb-2 pt-2 items-center flex flex-row space-x-2'>
+        <div className='w-full bg-white fixed left-0 bottom-0 h-fit border-t-[1px] pl-2 pr-2 pb-10 pt-2 items-center flex flex-row space-x-2'>
             <Textarea
                 placeholder="Type your message"
                 className={"resize-none text-[16px]"}
