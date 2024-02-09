@@ -20,7 +20,9 @@ const MessageSender = ({sendMessage, messageList, onTyping}:
                 onTyping("typing");
             }}
             onKeyUp={(e)=>{
-                onTyping("not_typing");
+                if(message === ""){
+                    onTyping("not_typing");
+                }
                 if(e.key === "Enter"){
                     if(message.trim().length > 1)
                     {
