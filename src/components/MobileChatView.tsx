@@ -127,7 +127,7 @@ const MobileChatView = ({
         <MessageRoom isMobile={true} messages={messageList}/>
         <MessageSender isMobile={true} onTyping={onTyping} sendMessage={sendMessage} messageList={setMessageList}/>
     </div>
-    <Dialog open={/*room === "" || active === false*/ false}>
+    <Dialog open={room === "" || active === false}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Finding Conversation</DialogTitle>

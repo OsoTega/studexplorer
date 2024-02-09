@@ -108,7 +108,7 @@ const DesktopChatView = ({
         <MessageSender onTyping={onTyping} sendMessage={sendMessage} messageList={setMessageList}/>
       </CardContent>
     </Card>
-    <Dialog open={/*room === "" || active === false*/ false}>
+    <Dialog open={room === "" || active === false}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Finding Conversation</DialogTitle>
