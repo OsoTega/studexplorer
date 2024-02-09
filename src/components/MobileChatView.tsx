@@ -125,7 +125,7 @@ const MobileChatView = ({
           ) 
         }
         <MessageRoom messages={messageList}/>
-        <MessageSender onTyping={onTyping} sendMessage={sendMessage} messageList={setMessageList}/>
+        <MessageSender isMobile={true} onTyping={onTyping} sendMessage={sendMessage} messageList={setMessageList}/>
     </div>
     <Dialog open={room === "" || active === false}>
       <DialogContent className="sm:max-w-[425px]">
