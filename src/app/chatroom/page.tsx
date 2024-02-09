@@ -104,28 +104,28 @@ export default function Home() {
       
     }
 
-    useEffect(()=>{
-      const handleUserCloseWindow = (e: any)=>{
-        e.preventDefault()
-        setRoom("");
-        setActive(false);
-        setMessageList([]);
-        leaveRoom().then((leaveResult)=>{
-          if(leaveResult.success){
-            setUserTyping(false);
-            socket.emit("leave_room", room);
-            router.replace("/");
-          }
-        })
-        return (e.returnValue = "You are exiting this chat")
-    }
+    // useEffect(()=>{
+    //   const handleUserCloseWindow = (e: any)=>{
+    //     e.preventDefault()
+    //     setRoom("");
+    //     setActive(false);
+    //     setMessageList([]);
+    //     leaveRoom().then((leaveResult)=>{
+    //       if(leaveResult.success){
+    //         setUserTyping(false);
+    //         socket.emit("leave_room", room);
+    //         router.replace("/");
+    //       }
+    //     })
+    //     return (e.returnValue = "You are exiting this chat")
+    // }
 
-    window.addEventListener("beforeunload", handleUserCloseWindow);
+    // window.addEventListener("beforeunload", handleUserCloseWindow);
 
-    return ()=>{
-      window.removeEventListener("beforeunload", handleUserCloseWindow)
-    }
-    },[])
+    // return ()=>{
+    //   window.removeEventListener("beforeunload", handleUserCloseWindow)
+    // }
+    // },[])
 
     useEffect(() => {
       if ("serviceWorker" in navigator) {
@@ -160,8 +160,16 @@ export default function Home() {
     }, [])
 
     useEffect(()=>{
+      const sound = new Audio("/sounds/message.mp3")
           const evenAction = (data: any)=>{
-            console.log(data);
+            sound.play();
+            //@ts-ignore
+          navigator.vibrate = navigator.vibrate || navigator?.webkitVibrate || navigator?.mozVibrate || navigator?.msVibrate;
+
+          if (navigator.vibrate) {
+            // vibration API supported
+              navigator.vibrate(1000);
+          }
             setMessageList((prev)=>{
                 const newArray = [...prev];
                 newArray.push({
@@ -174,12 +182,26 @@ export default function Home() {
         }
 
           const evenSubAction = (data: any)=>{
+            //@ts-ignore
+            navigator.vibrate = navigator.vibrate || navigator?.webkitVibrate || navigator?.mozVibrate || navigator?.msVibrate;
+
+            if (navigator.vibrate) {
+              // vibration API supported
+                navigator.vibrate(1000);
+            }
             if(data === roomRef.current){
               setActive(true);
             }
         }
 
         const leftChatAction = (data: any)=>{
+          //@ts-ignore
+          navigator.vibrate = navigator.vibrate || navigator?.webkitVibrate || navigator?.mozVibrate || navigator?.msVibrate;
+
+            if (navigator.vibrate) {
+              // vibration API supported
+                navigator.vibrate(1000);
+            }
           if(data === roomRef.current){
             setActive(false);
             setMessageList([]);
