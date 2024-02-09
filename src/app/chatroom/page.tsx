@@ -135,7 +135,7 @@ export default function Home() {
           })
       }
 
-      window.addEventListener("beforeinput", handleUserCloseWindow);
+      window.addEventListener("beforeunload", handleUserCloseWindow);
 
       return ()=>window.removeEventListener("beforeunload", handleUserCloseWindow);
     }, [])
