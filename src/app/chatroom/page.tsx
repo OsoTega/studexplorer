@@ -36,6 +36,7 @@ export default function Home() {
     const [messageList, setMessageList] = useState<{type: boolean, message: string}[]>([]);
     const [room, setRoom] = useState("");
     const [userId, setUserId] = useState("");
+    const [userTyping, setUserTyping] = useState(false);
     const router = useRouter();
     const roomRef = useRef(room);
     const [info, setInfo] = useState(false);
@@ -45,6 +46,10 @@ export default function Home() {
     const sendMessage = (message: string)=>{
       const language = localStorage.getItem("studexplorer_language");
         socket.emit("send_message", {room, message, language: language ? language : "en"});
+    }
+
+    const onTyping = (type: string)=>{
+        socket.emit(type, {room});
     }
 
     const requestRoom = async (id?: string) =>{
@@ -116,6 +121,23 @@ export default function Home() {
 
         socket.emit("join_room", value.roomId);
       });
+
+      const handleUserCloseWindow = ()=>{
+          setRoom("");
+          setActive(false);
+          setMessageList([]);
+          leaveRoom().then((leaveResult)=>{
+            if(leaveResult.success){
+              setUserTyping(false);
+              socket.emit("leave_room", room);
+              router.replace("/");
+            }
+          })
+      }
+
+      window.addEventListener("beforeinput", handleUserCloseWindow);
+
+      return ()=>window.removeEventListener("beforeunload", handleUserCloseWindow);
     }, [])
 
     useEffect(()=>{
@@ -129,6 +151,7 @@ export default function Home() {
                 });
                 return newArray;
             })
+            setUserTyping(false);
         }
 
           const evenSubAction = (data: any)=>{
@@ -150,16 +173,28 @@ export default function Home() {
         }
     }
 
+        const onUserChatTyping = (data: any)=>{
+            setUserTyping(true);
+      }
+
+      const onUserChatNotTyping = (data: any)=>{
+        setUserTyping(false);
+  }
+
         socket.on("receive_message", evenAction)
         socket.on("joined_chat", evenSubAction)
         socket.on("left_chat", leftChatAction)
         socket.on("user_left_chat", onUserLeftChatAction)
+        socket.on("typing", onUserChatTyping)
+        socket.on("not_typing", onUserChatNotTyping)
 
         return () => {
           socket.off("receive_message", evenAction);
           socket.off("joined_chat", evenSubAction);
           socket.off("left_chat", leftChatAction);
           socket.off("user_left_chat", onUserLeftChatAction)
+          socket.off("typing", onUserChatTyping)
+          socket.off("not_typing", onUserChatNotTyping)
         }
     }, [socket])
   return (
@@ -170,6 +205,7 @@ export default function Home() {
       setMessageList([]);
       leaveRoom().then((leaveResult)=>{
         if(leaveResult.success){
+          setUserTyping(false);
           socket.emit("leave_room", room);
           router.replace("/");
         }
@@ -187,12 +223,16 @@ export default function Home() {
                   !mobile ? "chat_"+room.substring(0, 5)+"..." : "chat_"+room
                 }
             </Button>
+            {userTyping && (
+              <p className="text-muted-foreground">Typing</p>
+            )}
             <Button onClick={()=>{
               setRoom("");
               setActive(false);
               setMessageList([]);
               leaveRoom().then((leaveResult)=>{
                 if(leaveResult.success){
+                  setUserTyping(false);
                   socket.emit("leave_room", room);
                   requestRoom(userId).then((value)=>{
                     setRoom(value.roomId);
@@ -215,7 +255,7 @@ export default function Home() {
           ) 
         }
         <MessageRoom messages={messageList}/>
-        <MessageSender sendMessage={sendMessage} messageList={setMessageList}/>
+        <MessageSender onTyping={onTyping} sendMessage={sendMessage} messageList={setMessageList}/>
       </CardContent>
     </Card>
     <Dialog open={room === "" || active === false}>
@@ -252,6 +292,7 @@ export default function Home() {
             setMessageList([]);
             leaveRoom().then((leaveResult)=>{
               if(leaveResult.success){
+                setUserTyping(false);
                 socket.emit("leave_room", room);
                 requestRoom(userId).then((value)=>{
                   setRoom(value.roomId);
