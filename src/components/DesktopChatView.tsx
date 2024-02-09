@@ -73,9 +73,6 @@ const DesktopChatView = ({
                   "chat_"+room
                 }
             </Button>
-            {userTyping && (
-              <p className="text-muted-foreground text-[12px]">Typing...</p>
-            )}
             <Button onClick={()=>{
               setRoom("");
               setActive(false);
@@ -104,6 +101,13 @@ const DesktopChatView = ({
             </div>
           ) 
         }
+        {userTyping && (
+            <div className='w-[100px] pl-2 pr-2 rounded-full top-20 border-[1px] left-[47%] fixed h-[40px] bg-[#f4f4f5] flex flex-row items-center justify-evenly'>
+                <div className='w-[10px] animate-pulse rounded-full h-[10px] bg-[#929292] flex flex-row justify-between'/>
+                <div className='w-[10px] animate-pulse rounded-full h-[10px] bg-[#929292] flex flex-row justify-between'/>
+                <div className='w-[10px] animate-pulse rounded-full h-[10px] bg-[#929292] flex flex-row justify-between'/>
+            </div>
+        )}
         <MessageRoom messages={messageList}/>
         <MessageSender onTyping={onTyping} sendMessage={sendMessage} messageList={setMessageList}/>
       </CardContent>

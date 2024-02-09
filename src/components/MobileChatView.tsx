@@ -87,15 +87,19 @@ const MobileChatView = ({
      <div className="w-full pt-8 pb-8">
      {
           room.trim().length > 0 && (
-            <div className="flex fixed w-full pl-2 bg-white top-[56.8px] h-[58px] left-0 flex-row items-center justify-between">
+            <div className="flex fixed w-full pl-2 pr-2 bg-white top-[56.8px] h-[58px] left-0 flex-row items-center justify-between">
             <Button variant="outline" className="rounded-full">
                 {
                   "chat_"+room.substring(0, 5)+"..."
                 }
             </Button>
             {userTyping && (
-              <p className="text-muted-foreground text-[12px]">Typing...</p>
-            )}
+            <div className='w-[80px] pl-2 pr-2 rounded-full border-[1px] h-[28px] bg-[#f4f4f5] flex flex-row items-center justify-evenly'>
+                <div className='w-[10px] animate-pulse rounded-full h-[10px] bg-[#929292] flex flex-row justify-between'/>
+                <div className='w-[10px] animate-pulse rounded-full h-[10px] bg-[#929292] flex flex-row justify-between'/>
+                <div className='w-[10px] animate-pulse rounded-full h-[10px] bg-[#929292] flex flex-row justify-between'/>
+            </div>
+        )}
             <Button onClick={()=>{
               setRoom("");
               setActive(false);
