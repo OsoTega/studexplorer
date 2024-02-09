@@ -16,11 +16,15 @@ import {
   AlertDialogTrigger,
 } from "./ui/alert-dialog"
 import Link from 'next/link'
+import useMediaQuery from '@/hooks/use-media-query'
+import MobileNav from './MobileNav'
 
 const Navbar = () => {
   const {user, isLoaded} = useUser()
-  return (
-    <div className='w-full flex flex-row pt-4 justify-between'>
+  const isDesktop = useMediaQuery("(min-width: 740px)");
+  if(isDesktop){
+    return(
+      <div className='w-full flex flex-row pt-4 justify-between'>
         <div>
           <Link href="/" className='cursor-pointer'>
             <Image src="/StudExplorer-logos_black.png" 
@@ -58,7 +62,8 @@ const Navbar = () => {
         </AlertDialog>
         </div>
     </div>
-  )
+    )
+  }
 }
 
 export default Navbar

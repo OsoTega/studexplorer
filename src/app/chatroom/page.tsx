@@ -15,12 +15,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogClose,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, DoorOpen, RotateCw } from "lucide-react";
+import { ArrowLeft, RotateCw } from "lucide-react";
 import MessageRoom from "@/components/MessageRoom";
 import MessageSender from "@/components/MessageSender";
 import {io} from 'socket.io-client'
@@ -28,8 +27,9 @@ import { useEffect, useRef, useState } from "react";
 import crypto from 'crypto';
 import useMediaQuery from "@/hooks/use-media-query";
 import GifComponent from "@/components/GifComponent";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { useRouter } from "next/navigation";
+import DesktopChatView from "@/components/DesktopChatView";
+import MobileChatView from "@/components/MobileChatView";
 const socket = io("https://stud-explorer.onrender.com");
 
 export default function Home() {
@@ -42,7 +42,7 @@ export default function Home() {
     const [info, setInfo] = useState(false);
     const [roomHistory, setRoomHistory] = useState<any | never | unknown>([]);
     const [active, setActive] = useState(false);
-    const mobile = useMediaQuery("(min-width: 880px)");
+    const isDesktop = useMediaQuery("(min-width: 740px)");
     const sendMessage = (message: string)=>{
       const language = localStorage.getItem("studexplorer_language");
         socket.emit("send_message", {room, message, language: language ? language : "en"});
@@ -127,6 +127,19 @@ export default function Home() {
     }
     },[])
 
+    useEffect(() => {
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/sw.js")
+          .then((registration) => {
+            console.log("Registration successful");
+          })
+          .catch((error) => {
+            console.log("Service worker registration failed");
+          });
+      }
+    }, []);
+
 
 
     useEffect(()=>{
@@ -203,121 +216,51 @@ export default function Home() {
           socket.off("user_not_typing", onUserChatNotTyping)
         }
     }, [socket])
-  return (
-   <div className="w-full h-[500px] mt-[140px] md:mt-[140px] flex flex-col space-y-8 justify-center items-center">
-    <Button onClick={()=>{
-      setRoom("");
-      setActive(false);
-      setMessageList([]);
-      leaveRoom().then((leaveResult)=>{
-        if(leaveResult.success){
-          setUserTyping(false);
-          socket.emit("leave_room", room);
-          router.replace("/");
-        }
-      })
-    }} className="self-start" variant="outline">
-    <ArrowLeft/>
-    </Button>
-     <Card className="w-[350px] md:w-[450px]">
-      <CardContent className="pt-8 pb-8">
-        {
-          room.trim().length > 0 && (
-            <div className="flex flex-row items-center justify-between">
-            <Button variant="outline" className="rounded-full">
-                {
-                  !mobile ? "chat_"+room.substring(0, 5)+"..." : "chat_"+room.substring(0, 10)+"..."
-                }
-            </Button>
-            {userTyping && (
-              <p className="text-muted-foreground text-[12px]">Typing...</p>
-            )}
-            <Button onClick={()=>{
-              setRoom("");
-              setActive(false);
-              setMessageList([]);
-              leaveRoom().then((leaveResult)=>{
-                if(leaveResult.success){
-                  setUserTyping(false);
-                  socket.emit("leave_room", room);
-                  requestRoom(userId).then((value)=>{
-                    setRoom(value.roomId);
-                    roomRef.current = value.roomId;
-                    setActive(value.active);
-                    setRoomHistory((prev: any)=>{
-                      const newRoom = [...prev];
-                      newRoom.push(value.roomId);
-                      return newRoom;
-                    })
-            
-                    socket.emit("join_room", value.roomId);
-                  });
-                }
-              })
-            }} variant="ghost">
-                <RotateCw/>
-            </Button>
-            </div>
-          ) 
-        }
-        <MessageRoom messages={messageList}/>
-        <MessageSender onTyping={onTyping} sendMessage={sendMessage} messageList={setMessageList}/>
-      </CardContent>
-    </Card>
-    <Dialog open={room === "" || active === false}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Finding Conversation</DialogTitle>
-          <DialogDescription>
-            Please wait while we find you a conversation
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <GifComponent/>
-          <p className="text-center">Searching for a conversation </p>
-        </div>
-      </DialogContent>
-    </Dialog>
-    <Dialog open={info} onOpenChange={setInfo}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Chat Ended</DialogTitle>
-          <DialogDescription>
-            It{"'"}s time to change chat
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <p>
-            The previous chat has come to an end, click the button to join another chat
-            </p>
-        </div>
-        <DialogClose>
-          <Button onClick={()=>{
-            setRoom("");
-            setActive(false);
-            setMessageList([]);
-            leaveRoom().then((leaveResult)=>{
-              if(leaveResult.success){
-                setUserTyping(false);
-                socket.emit("leave_room", room);
-                requestRoom(userId).then((value)=>{
-                  setRoom(value.roomId);
-                  roomRef.current = value.roomId;
-                  setActive(value.active);
-                  setRoomHistory((prev: any)=>{
-                    const newRoom = [...prev];
-                    newRoom.push(value.roomId);
-                    return newRoom;
-                  })
-          
-                  socket.emit("join_room", value.roomId);
-                });
-              }
-            })
-          }}>Acknowledge</Button>
-        </DialogClose>
-      </DialogContent>
-    </Dialog>
-   </div>
-  );
+  if(isDesktop){
+    return (
+      <DesktopChatView 
+      setRoom={setRoom}
+      setActive={setActive}
+      setMessageList={setMessageList}
+      leaveRoom={leaveRoom}
+      setUserTyping={setUserTyping}
+      socket={socket}
+      room={room}
+      userTyping={userTyping}
+      roomRef={roomRef}
+      requestRoom={requestRoom}
+      setRoomHistory={setRoomHistory}
+      info={info}
+      setInfo={setInfo}
+      userId={userId}
+      active={active}
+      messageList={messageList}
+      onTyping={onTyping}
+      sendMessage={sendMessage}
+      />
+    )
+  }else{
+    return(
+      <MobileChatView
+      setRoom={setRoom}
+      setActive={setActive}
+      setMessageList={setMessageList}
+      leaveRoom={leaveRoom}
+      setUserTyping={setUserTyping}
+      socket={socket}
+      room={room}
+      userTyping={userTyping}
+      roomRef={roomRef}
+      requestRoom={requestRoom}
+      setRoomHistory={setRoomHistory}
+      info={info}
+      setInfo={setInfo}
+      userId={userId}
+      active={active}
+      messageList={messageList}
+      onTyping={onTyping}
+      sendMessage={sendMessage}
+      />
+    )
+  }
 }
