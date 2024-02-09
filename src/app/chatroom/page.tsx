@@ -105,7 +105,8 @@ export default function Home() {
     }
 
     useEffect(()=>{
-      const handleUserCloseWindow = ()=>{
+      const handleUserCloseWindow = (e: any)=>{
+        e.preventDefault()
         setRoom("");
         setActive(false);
         setMessageList([]);
@@ -116,11 +117,14 @@ export default function Home() {
             router.replace("/");
           }
         })
+        return (e.returnValue = "You are exiting this chat")
     }
 
     window.addEventListener("beforeunload", handleUserCloseWindow);
 
-    return ()=>window.removeEventListener("beforeunload", handleUserCloseWindow);
+    return ()=>{
+      window.removeEventListener("beforeunload", handleUserCloseWindow)
+    }
     },[])
 
 
@@ -226,7 +230,7 @@ export default function Home() {
                 }
             </Button>
             {userTyping && (
-              <p className="text-muted-foreground text-[10px]">Typing...</p>
+              <p className="text-muted-foreground text-[12px]">Typing...</p>
             )}
             <Button onClick={()=>{
               setRoom("");
