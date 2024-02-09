@@ -83,11 +83,11 @@ const MobileChatView = ({
             </Link>
             <MobileNav/>
       </div>
-    <div className="w-full h-fit mt-[40px] pl-2 pr-2 fixed top-0 left-0 flex flex-col space-y-8 justify-center items-center">
+    <div className="w-full h-fit mt-[40px] flex flex-col space-y-8 justify-center items-center">
      <div className="w-full pt-8 pb-8">
      {
           room.trim().length > 0 && (
-            <div className="flex flex-row items-center justify-between">
+            <div className="flex fixed w-full pl-2 pr-2 bg-white top-[56.8px] h-[58px] left-0 flex-row items-center justify-between">
             <Button variant="outline" className="rounded-full">
                 {
                   "chat_"+room.substring(0, 5)+"..."
@@ -124,10 +124,10 @@ const MobileChatView = ({
             </div>
           ) 
         }
-        <MessageRoom messages={messageList}/>
+        <MessageRoom isMobile={true} messages={messageList}/>
         <MessageSender isMobile={true} onTyping={onTyping} sendMessage={sendMessage} messageList={setMessageList}/>
     </div>
-    <Dialog open={room === "" || active === false}>
+    <Dialog open={/*room === "" || active === false*/ false}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Finding Conversation</DialogTitle>

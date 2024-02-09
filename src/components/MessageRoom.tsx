@@ -40,7 +40,7 @@ const Message = ({type, message}: {type: boolean, message: string})=>{
     }
 }
 
-const MessageRoom = ({messages}: {messages: {type: boolean, message: string}[]}) => {
+const MessageRoom = ({messages, isMobile}: {messages: {type: boolean, message: string}[], isMobile?: boolean}) => {
     const divRef = useRef();
     const scrollToElement = () => {
         const {current} = divRef
@@ -50,14 +50,25 @@ const MessageRoom = ({messages}: {messages: {type: boolean, message: string}[]})
          }
       }
     useEffect(scrollToElement, [messages])
-  return (
-    <div className='w-full h-[400px] overflow-y-auto pl-5 pr-5'>
-        {messages.map((message, index)=>(
-            <Message key={index} type={message.type} message={message.message}/>
-        ))}
-        <div className='mt-4' ref={divRef as any} />
-    </div>
-  )
+  if(isMobile){
+    return (
+        <div className='w-full overflow-y-auto pt-12 pb-14 pl-5 pr-5'>
+            {messages.map((message, index)=>(
+                <Message key={index} type={message.type} message={message.message}/>
+            ))}
+            <div className='mt-4' ref={divRef as any} />
+        </div>
+      )
+  }else{
+    return (
+        <div className='w-full h-[400px] overflow-y-auto pl-5 pr-5'>
+            {messages.map((message, index)=>(
+                <Message key={index} type={message.type} message={message.message}/>
+            ))}
+            <div className='mt-4' ref={divRef as any} />
+        </div>
+      )
+  }
 }
 
 export default MessageRoom
