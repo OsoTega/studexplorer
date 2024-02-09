@@ -161,15 +161,24 @@ export default function Home() {
 
     useEffect(()=>{
       const sound = new Audio("/sounds/message.mp3")
+      function vibrate() {
+        if (!window) {
+            return;
+        }
+    
+        if (!window.navigator) {
+            return;
+        }
+    
+        if (!window.navigator.vibrate) {
+            return;
+        }
+    
+        window.navigator.vibrate(800);
+    }
           const evenAction = (data: any)=>{
             sound.play();
-            //@ts-ignore
-          navigator.vibrate = navigator.vibrate || navigator?.webkitVibrate || navigator?.mozVibrate || navigator?.msVibrate;
-
-          if (navigator.vibrate) {
-            // vibration API supported
-              navigator.vibrate(1000);
-          }
+            vibrate()
             setMessageList((prev)=>{
                 const newArray = [...prev];
                 newArray.push({
@@ -182,26 +191,14 @@ export default function Home() {
         }
 
           const evenSubAction = (data: any)=>{
-            //@ts-ignore
-            navigator.vibrate = navigator.vibrate || navigator?.webkitVibrate || navigator?.mozVibrate || navigator?.msVibrate;
-
-            if (navigator.vibrate) {
-              // vibration API supported
-                navigator.vibrate(1000);
-            }
+            vibrate()
             if(data === roomRef.current){
               setActive(true);
             }
         }
 
         const leftChatAction = (data: any)=>{
-          //@ts-ignore
-          navigator.vibrate = navigator.vibrate || navigator?.webkitVibrate || navigator?.mozVibrate || navigator?.msVibrate;
-
-            if (navigator.vibrate) {
-              // vibration API supported
-                navigator.vibrate(1000);
-            }
+          vibrate()
           if(data === roomRef.current){
             setActive(false);
             setMessageList([]);
