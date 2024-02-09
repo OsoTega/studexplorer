@@ -104,6 +104,25 @@ export default function Home() {
       
     }
 
+    useEffect(()=>{
+      const handleUserCloseWindow = ()=>{
+        setRoom("");
+        setActive(false);
+        setMessageList([]);
+        leaveRoom().then((leaveResult)=>{
+          if(leaveResult.success){
+            setUserTyping(false);
+            socket.emit("leave_room", room);
+            router.replace("/");
+          }
+        })
+    }
+
+    window.addEventListener("beforeunload", handleUserCloseWindow);
+
+    return ()=>window.removeEventListener("beforeunload", handleUserCloseWindow);
+    },[])
+
 
 
     useEffect(()=>{
@@ -121,23 +140,6 @@ export default function Home() {
 
         socket.emit("join_room", value.roomId);
       });
-
-      const handleUserCloseWindow = ()=>{
-          setRoom("");
-          setActive(false);
-          setMessageList([]);
-          leaveRoom().then((leaveResult)=>{
-            if(leaveResult.success){
-              setUserTyping(false);
-              socket.emit("leave_room", room);
-              router.replace("/");
-            }
-          })
-      }
-
-      window.addEventListener("beforeunload", handleUserCloseWindow);
-
-      return ()=>window.removeEventListener("beforeunload", handleUserCloseWindow);
     }, [])
 
     useEffect(()=>{
@@ -185,16 +187,16 @@ export default function Home() {
         socket.on("joined_chat", evenSubAction)
         socket.on("left_chat", leftChatAction)
         socket.on("user_left_chat", onUserLeftChatAction)
-        socket.on("typing", onUserChatTyping)
-        socket.on("not_typing", onUserChatNotTyping)
+        socket.on("user_typing", onUserChatTyping)
+        socket.on("user_not_typing", onUserChatNotTyping)
 
         return () => {
           socket.off("receive_message", evenAction);
           socket.off("joined_chat", evenSubAction);
           socket.off("left_chat", leftChatAction);
           socket.off("user_left_chat", onUserLeftChatAction)
-          socket.off("typing", onUserChatTyping)
-          socket.off("not_typing", onUserChatNotTyping)
+          socket.off("user_typing", onUserChatTyping)
+          socket.off("user_not_typing", onUserChatNotTyping)
         }
     }, [socket])
   return (

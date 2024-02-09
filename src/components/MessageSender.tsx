@@ -17,10 +17,10 @@ const MessageSender = ({sendMessage, messageList, onTyping}:
             value={message}
             onChange={(e)=>setMessage(e.target.value)}
             onKeyDown={(e)=>{
-                onTyping("user_typing");
+                onTyping("typing");
             }}
             onKeyUp={(e)=>{
-                onTyping("user_not_typing");
+                onTyping("not_typing");
                 if(e.key === "Enter"){
                     if(message.trim().length > 1)
                     {
