@@ -206,9 +206,27 @@ export default function Home() {
       }
 
       const onUserLeftChatAction = (data: any)=>{
-        if(data === roomRef.current){
-          setInfo(true);
-        }
+        setRoom("");
+            setActive(false);
+            setMessageList([]);
+            leaveRoom(false).then((leaveResult)=>{
+              if(leaveResult.success){
+                setUserTyping(false);
+                socket.emit("leave_room", room);
+                requestRoom(userId).then((value)=>{
+                  setRoom(value.roomId);
+                  roomRef.current = value.roomId;
+                  setActive(value.active);
+                  setRoomHistory((prev: any)=>{
+                    const newRoom = [...prev];
+                    newRoom.push(value.roomId);
+                    return newRoom;
+                  })
+          
+                  socket.emit("join_room", value.roomId);
+                });
+              }
+            })
     }
 
         const onUserChatTyping = (data: any)=>{
