@@ -78,7 +78,7 @@ export default function Home() {
       
     }
 
-    const leaveRoom = async () =>{
+    const leaveRoom = async (exiting: boolean) =>{
       const language = localStorage.getItem("studexplorer_language");
       const response = await fetch('https://stud-explorer.onrender.com/leave-room', {
         method: "POST",
@@ -90,7 +90,8 @@ export default function Home() {
           room,
           language: language ? language : "en",
           rooms: roomHistory,
-          id: userId
+          id: userId,
+          exiting
         })
       })
 

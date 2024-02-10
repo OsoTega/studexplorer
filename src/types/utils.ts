@@ -4,7 +4,7 @@ export interface ResponsiveChatType{
     setRoom: React.Dispatch<React.SetStateAction<string>>
     setActive: React.Dispatch<React.SetStateAction<boolean>>
     setMessageList: React.Dispatch<React.SetStateAction<{type: boolean, message: string}[]>>
-    leaveRoom: () => Promise<any>
+    leaveRoom: (exiting: boolean) => Promise<any>
     setUserTyping: React.Dispatch<React.SetStateAction<boolean>>
     socket: Socket
     room: string

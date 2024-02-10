@@ -61,7 +61,7 @@ const MobileChatView = ({
                 setRoom("");
                 setActive(false);
                 setMessageList([]);
-                leaveRoom().then((leaveResult)=>{
+                leaveRoom(true).then((leaveResult)=>{
                     if(leaveResult.success){
                     setUserTyping(false);
                     socket.emit("leave_room", room);
@@ -104,7 +104,7 @@ const MobileChatView = ({
               setRoom("");
               setActive(false);
               setMessageList([]);
-              leaveRoom().then((leaveResult)=>{
+              leaveRoom(false).then((leaveResult)=>{
                 if(leaveResult.success){
                   setUserTyping(false);
                   socket.emit("leave_room", room);
@@ -163,7 +163,7 @@ const MobileChatView = ({
             setRoom("");
             setActive(false);
             setMessageList([]);
-            leaveRoom().then((leaveResult)=>{
+            leaveRoom(false).then((leaveResult)=>{
               if(leaveResult.success){
                 setUserTyping(false);
                 socket.emit("leave_room", room);
