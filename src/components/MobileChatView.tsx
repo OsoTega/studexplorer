@@ -142,7 +142,20 @@ const MobileChatView = ({
         <div className="grid gap-4 py-4">
           <GifComponent/>
           <p className="text-center">Searching for a conversation </p>
+          <Button onClick={()=>{
+            setRoom("");
+            setActive(false);
+            setMessageList([]);
+            leaveRoom(true).then((leaveResult)=>{
+                if(leaveResult.success){
+                setUserTyping(false);
+                socket.emit("leave_room", room);
+                router.replace("/");
+                }
+            })
+          }} variant="outline">Cancel</Button>
         </div>
+        
       </DialogContent>
     </Dialog>
     <Dialog open={info} onOpenChange={setInfo}>

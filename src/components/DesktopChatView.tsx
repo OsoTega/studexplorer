@@ -124,6 +124,18 @@ const DesktopChatView = ({
           <GifComponent/>
           <p className="text-center">Searching for a conversation </p>
         </div>
+        <Button onClick={()=>{
+            setRoom("");
+            setActive(false);
+            setMessageList([]);
+            leaveRoom(true).then((leaveResult)=>{
+                if(leaveResult.success){
+                setUserTyping(false);
+                socket.emit("leave_room", room);
+                router.replace("/");
+                }
+            })
+          }} variant="outline">Cancel</Button>
       </DialogContent>
     </Dialog>
     <Dialog open={info} onOpenChange={setInfo}>
