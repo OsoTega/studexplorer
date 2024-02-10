@@ -4,7 +4,36 @@ import {JSDOM} from 'jsdom';
 import DOMPurify from 'dompurify';
 import {useTransition, animated} from '@react-spring/web'
 
-const Message = ({type, message}: {type: boolean, message: string})=>{
+
+const ReceiveMessage = ({linkify, message}: {linkify: (text: string) => string, message: string})=>{
+    const transition = useTransition(message, {
+        from: {
+            x: -100,
+            y: 80,
+            opacity: 0
+        },
+        enter: {
+            x: 0,
+            y: 0,
+            opacity: 1
+        },
+        leave: {}
+    })
+    return (
+        <div className='w-full mt-4 flex flex-row justify-between'>
+            {
+                transition((style, item)=> item ? (
+                    <animated.div style={style} className='bg-[#f4f4f5] rounded-md max-w-[70%] whitespace-normal text-wrap text-[#18181b] p-2'>
+                    <p className='w-full break-words text-wrap whitespace-normal' dangerouslySetInnerHTML={{ __html: linkify(message) }}/>
+                    </animated.div>
+                ): <div/>)
+            }
+            <div/>
+        </div>
+    );
+}
+
+const SendMessage = ({linkify, message}: {linkify: (text: string) => string, message: string})=>{
     const transition = useTransition(message, {
         from: {
             x: 100,
@@ -18,20 +47,21 @@ const Message = ({type, message}: {type: boolean, message: string})=>{
         },
         leave: {}
     })
+    return (
+        <div className='w-full mt-4 flex flex-row justify-between'>
+            <div/>
+            {
+                transition((style, item)=> item ? (
+                    <animated.div style={style} className='bg-[#18181b] rounded-md max-w-[70%] whitespace-normal text-wrap text-[white] p-2'>
+                        <p className='w-full break-words text-wrap' dangerouslySetInnerHTML={{ __html: linkify(message) }}/>
+                    </animated.div>
+                ): <div/>)
+            }
+        </div>
+    );
+}
 
-    const transitionReceiveMessage = useTransition(message, {
-        from: {
-            x: -100,
-            y: 80,
-            opacity: 0
-        },
-        enter: {
-            x: 0,
-            y: 0,
-            opacity: 1
-        },
-        leave: {}
-    })
+const Message = ({type, message}: {type: boolean, message: string})=>{
     const linkify = (text: string)=>{
         const urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
         // extract your url by urlRegex something like
@@ -49,32 +79,11 @@ const Message = ({type, message}: {type: boolean, message: string})=>{
       }
     if(type){
         return (
-            <div className='w-full mt-4 flex flex-row justify-between'>
-                <div/>
-                {
-                    transition((style, item)=> item ? (
-                        <animated.div style={style} className='bg-[#18181b] rounded-md max-w-[70%] whitespace-normal text-wrap text-[white] p-2'>
-                            <p className='w-full break-words text-wrap' dangerouslySetInnerHTML={{ __html: linkify(message) }}/>
-                        </animated.div>
-                    ): <div/>)
-                }
-            </div>
+            <SendMessage linkify={linkify} message={message}/>
         );
     }else{
         return (
-            <div className='w-full mt-4 flex flex-row justify-between'>
-                <div className='bg-[#f4f4f5] rounded-md max-w-[70%] whitespace-normal text-wrap text-[#18181b] p-2'>
-                <p className='w-full break-words text-wrap whitespace-normal' dangerouslySetInnerHTML={{ __html: linkify(message) }}/>
-                </div>
-                {
-                    transitionReceiveMessage((style, item)=> item ? (
-                        <animated.div style={style} className='bg-[#f4f4f5] rounded-md max-w-[70%] whitespace-normal text-wrap text-[#18181b] p-2'>
-                        <p className='w-full break-words text-wrap whitespace-normal' dangerouslySetInnerHTML={{ __html: linkify(message) }}/>
-                        </animated.div>
-                    ): <div/>)
-                }
-                <div/>
-            </div>
+            <ReceiveMessage linkify={linkify} message={message}/>
         );
     }
 }
