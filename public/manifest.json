@@ -1,12 +1,12 @@
 {
-    "theme_color": "#f4f4f5",
-    "background_color": "#f4f4f5",
+    "theme_color": "#ffffff",
+    "background_color": "#393838",
     "display": "standalone",
     "scope": "/",
     "start_url": "/",
     "name": "StudExplorer",
-    "description": "An anonymous chat application",
     "short_name": "StudExplorer",
+    "description": "An anonymous chat application",
     "icons": [
         {
             "src": "/icon-192x192.png",
