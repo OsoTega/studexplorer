@@ -64,7 +64,7 @@ const MobileChatView = ({
                 leaveRoom(true).then((leaveResult)=>{
                     if(leaveResult.success){
                     setUserTyping(false);
-                    socket.emit("leave_room", room);
+                    socket.emit("leave_room", {room, exit: true});
                     router.replace("/");
                     }
                 })
@@ -107,7 +107,7 @@ const MobileChatView = ({
               leaveRoom(false).then((leaveResult)=>{
                 if(leaveResult.success){
                   setUserTyping(false);
-                  socket.emit("leave_room", room);
+                  socket.emit("leave_room", {room, exit: false});
                   requestRoom(userId).then((value)=>{
                     setRoom(value.roomId);
                     roomRef.current = value.roomId;
@@ -149,7 +149,7 @@ const MobileChatView = ({
             leaveRoom(true).then((leaveResult)=>{
                 if(leaveResult.success){
                 setUserTyping(false);
-                socket.emit("leave_room", room);
+                socket.emit("leave_room", {room, exit: true});
                 router.replace("/");
                 }
             })
@@ -179,7 +179,7 @@ const MobileChatView = ({
             leaveRoom(false).then((leaveResult)=>{
               if(leaveResult.success){
                 setUserTyping(false);
-                socket.emit("leave_room", room);
+                socket.emit("leave_room", {room, exit: false});
                 requestRoom(userId).then((value)=>{
                   setRoom(value.roomId);
                   roomRef.current = value.roomId;
