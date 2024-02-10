@@ -26,10 +26,8 @@ const Navbar = () => {
     return(
       <div className='w-full flex flex-row pt-4 justify-between'>
         <div>
-          <Link href="/" className='cursor-pointer'>
             <Image src="/StudExplorer-logos_black.png" 
             width={50} height={50} alt='logo'/>
-          </Link>
         </div>
         <div className='flex flex-row space-x-10'>
           {

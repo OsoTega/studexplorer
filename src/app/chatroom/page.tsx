@@ -106,29 +106,6 @@ export default function Home() {
       
     }
 
-    // useEffect(()=>{
-    //   const handleUserCloseWindow = (e: any)=>{
-    //     e.preventDefault()
-    //     setRoom("");
-    //     setActive(false);
-    //     setMessageList([]);
-    //     leaveRoom().then((leaveResult)=>{
-    //       if(leaveResult.success){
-    //         setUserTyping(false);
-    //         socket.emit("leave_room", room);
-    //         router.replace("/");
-    //       }
-    //     })
-    //     return (e.returnValue = "You are exiting this chat")
-    // }
-
-    // window.addEventListener("beforeunload", handleUserCloseWindow);
-
-    // return ()=>{
-    //   window.removeEventListener("beforeunload", handleUserCloseWindow)
-    // }
-    // },[])
-
     useEffect(() => {
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker
@@ -200,6 +177,7 @@ export default function Home() {
         const leftChatAction = (data: any)=>{
           vibrate()
           if(data === roomRef.current){
+            setRoom("");
             setActive(false);
             setMessageList([]);
           }

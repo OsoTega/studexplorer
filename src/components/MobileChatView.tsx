@@ -77,10 +77,9 @@ const MobileChatView = ({
                 <UserButton afterSignOutUrl='/'/>
               )
             } */}
-            <Link href="/" className='cursor-pointer'>
+            
               <Image src="/StudExplorer-logos_black.png" 
               width={50} height={50} alt='logo'/>
-            </Link>
             <MobileNav/>
       </div>
     <div className="w-full h-fit mt-[40px] flex flex-col space-y-8 justify-center items-center">
